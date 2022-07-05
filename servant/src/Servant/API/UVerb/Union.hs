@@ -1,5 +1,6 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE EmptyCase #-}
 {-# LANGUAGE ExplicitNamespaces #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -56,11 +57,13 @@ module Servant.API.UVerb.Union
 , eject
 , foldMapUnion
 , matchUnion
+, (<||>)
+, nil
 )
 where
 
 import Data.Proxy (Proxy)
-import Data.SOP.BasicFunctors (I, unI)
+import Data.SOP.BasicFunctors (I(..), unI)
 import Data.SOP.Constraint
 import Data.SOP.NS
 import Data.Type.Bool (If)
@@ -90,6 +93,21 @@ foldMapUnion proxy go = cfoldMap_NS proxy (go . unI)
 -- See also: 'foldMapUnion'.
 matchUnion :: forall (a :: *) (as :: [*]). (IsMember a as) => Union as -> Maybe a
 matchUnion = fmap unI . eject
+
+-- | Helper for building total 'Union' consumers
+--
+-- Example:
+--
+-- > go :: Union '[Int,Char,Text] -> Bool
+-- > go = (> 0) <||> (== 'c') <||> T.null <||> nil
+(<||>) :: (x -> a) -> (Union xs -> a) -> (Union (x ': xs) -> a)
+(f <||> g) v = case v of
+  Z (I x) -> f x
+  S x -> g x
+infixr 3 <||>
+
+nil :: Union '[] -> a
+nil v = case v of
 
 -- * Stuff stolen from 'Data.WorldPeace" but for generics-sop
 

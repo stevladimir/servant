@@ -7,6 +7,8 @@ module Servant.Client.Core.Reexport
     HasClient(..)
   , foldMapUnion
   , matchUnion
+  , (<||>)
+  , nil
   , AsClientT
   , (//)
   , (/:)

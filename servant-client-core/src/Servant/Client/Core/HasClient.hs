@@ -23,6 +23,8 @@ module Servant.Client.Core.HasClient (
     (/:),
     foldMapUnion,
     matchUnion,
+    (<||>),
+    nil
     ) where
 
 import           Prelude ()
@@ -91,7 +93,7 @@ import           Servant.API.Modifiers
                  (FoldRequired, RequiredArgument, foldRequiredArgument)
 import           Servant.API.TypeErrors
 import           Servant.API.UVerb
-                 (HasStatus, HasStatuses (Statuses, statuses), UVerb, Union, Unique, inject, statusOf, foldMapUnion, matchUnion)
+                 (HasStatus, HasStatuses (Statuses, statuses), UVerb, Union, Unique, inject, statusOf, foldMapUnion, matchUnion, (<||>), nil)
 
 import           Servant.Client.Core.Auth
 import           Servant.Client.Core.BasicAuth
